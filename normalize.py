@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-
+#Michael - added comments for easier readability 
 import csv
 import os
 from collections import defaultdict
 
-
+#this checks to see if the string input is valid 
 def detect_delimiter(sample_line: str) -> str:
     tab_count = sample_line.count("\t")
     comma_count = sample_line.count(",")
     return "\t" if tab_count > comma_count else ","
 
-
+#This gets a book for the reader to read. (book class?) 
 def read_books(books_path: str):
     with open(books_path, "r", encoding="utf-8", newline="") as f:
         first_line = f.readline()
@@ -61,8 +61,9 @@ def read_books(books_path: str):
             isbn_to_authors[isbn] = merged
 
     return isbn_to_title, isbn_to_authors
+#end of the book class
 
-
+#the borrowers class 
 def read_borrowers(borrowers_path: str):
     with open(borrowers_path, "r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
@@ -71,15 +72,16 @@ def read_borrowers(borrowers_path: str):
 
         id_key = header_lower_to_actual.get("id0000id") or header_lower_to_actual.get("id")
         ssn_key = header_lower_to_actual.get("ssn")
-        first_key = header_lower_to_actual.get("first_name")
+        first_key = header_lower_to_actual.get("first_name") #first, last name should be combined 
         last_key = header_lower_to_actual.get("last_name")
-        addr_key = header_lower_to_actual.get("address")
-        city_key = header_lower_to_actual.get("city")
+        addr_key = header_lower_to_actual.get("address") 
+        city_key = header_lower_to_actual.get("city") #no need for city and state 
         state_key = header_lower_to_actual.get("state")
-        phone_key = header_lower_to_actual.get("phone")
+        phone_key = header_lower_to_actual.get("phone") 
 
         required = [id_key, ssn_key, first_key, last_key, addr_key, city_key, state_key, phone_key]
-        if any(k is None for k in required):
+        #validation of the borrowers class. 
+        if any(k is None for k in required): 
             raise ValueError(
                 "borrowers.csv must include columns: id, ssn, first_name, last_name, address, city, state, phone"
             )
@@ -110,8 +112,9 @@ def read_borrowers(borrowers_path: str):
             )
 
     return borrowers
+#end of borrowers class
 
-
+#write to ???
 def write_csv(path: str, fieldnames: list[str], rows: list[dict[str, str]]):
     with open(path, "w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -119,7 +122,7 @@ def write_csv(path: str, fieldnames: list[str], rows: list[dict[str, str]]):
         for row in rows:
             writer.writerow(row)
 
-
+#author class?
 def normalize(books_path: str, borrowers_path: str, output_dir: str):
     isbn_to_title, isbn_to_authors = read_books(books_path)
 
@@ -172,8 +175,9 @@ def normalize(books_path: str, borrowers_path: str, output_dir: str):
         "book_authors_count": len(book_authors_rows),
         "borrowers_count": len(borrower_rows),
     }
+#end of author class
 
-
+#looks like a mix of book_author and author (again) classes
 def validate_outputs(output_dir: str):
     # Helper to read CSV into list of dicts
     def read_dicts(path: str):
@@ -199,7 +203,7 @@ def validate_outputs(output_dir: str):
     if len(borrower_ids) != len(set(borrower_ids)):
         raise AssertionError("Duplicate Card_id found in borrower.csv")
 
-    # FK integrity
+    # validation that the author is valid 
     author_id_set = set(author_ids)
     book_isbn_set = set(book_isbns)
     for row in book_authors:
@@ -214,8 +218,9 @@ def validate_outputs(output_dir: str):
         "borrowers_unique": True,
         "book_authors_fk_valid": True,
     }
+#end of validate outputs class
 
-
+#main class, reads the info of the database, determining which table to be modified 
 def main():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     books_path = os.path.join(base_dir, "books.csv")
