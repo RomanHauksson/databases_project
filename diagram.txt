@@ -1,0 +1,31 @@
+BOOK
+• Primary Key: Isbn
+• Attributes: Isbn, Title
+
+AUTHORS
+• Primary Key: Author_id
+• Attributes: Author_id, Name
+
+BOOK_AUTHORS
+• Primary Key: (Author_id, Isbn)
+• Foreign Keys:
+ Author_id → AUTHORS(Author_id)
+ Isbn → BOOK(Isbn)
+• Attributes: Author_id, Isbn
+
+BORROWER
+• Primary Key: Card_id
+• Attributes: Card_id, Ssn, Bname, Address, Phone
+
+BOOK_LOANS
+• Primary Key: Loan_id
+• Foreign Keys:
+ Isbn → BOOK(Isbn)
+ Card_id → BORROWER(Card_id)
+• Attributes: Loan_id, Isbn, Card_id, Date_out, Due_date, Date_in
+
+FINES
+• Primary Key: Loan_id
+• Foreign Key:
+ Loan_id → BOOK_LOANS(Loan_id)
+• Attributes: Loan_id, Fine_amt, Paid

@@ -1,0 +1,34 @@
+Description
+This SQL programming project involves the creation of a database host application that
+interfaces with a backend SQL database implementing a Library Management System. Users of
+the system are understood to be librarians (not book borrowers).
+Milestone 1
+The first milestone involves normalizing the given data into Third Normal Form (3NF). You are
+given two plain text CSV files (books.csv and borrowers.csv). The files should be
+normalized into separate files that are compatible with the schema defined below. Note that
+initially you do not have any information about records in either book_loans or fines tables.
+Your team’s submission should contain five items:
+1) book.csv
+2) book_authors.csv
+3) authors.csv
+4) borrower.csv
+5) The source code to the file or files that performs the normalization
+All files should be bundled into a single archive file for upload (zip, gzip, or tar).
+Schema
+The schema for the library database is derived from (but NOT the same as) the library schema in
+the textbook (Figure 6.6). The actual schema used for this project is provided below. You are
+permitted to modify or augment this schema provided that your system (a) is backwards
+compatible with the given schema, and (b) adheres to the written requirements. As long as your
+system supports the documented functionality, you may add any features you deem useful.
+Data
+• All data is provided in plain text CSV files. Note that there is not a one-to-one, file-to-
+table correspondence. The Milestone 1 part of your system design task is to map (i.e.
+normalize) these data onto your schema and tables.
+• All book id's are 10-character ISBN numbers (i.e. some contain alpha characters). Note
+that some may contain leading zeroes. These are part of ISBN and should not be
+truncated!
+• Both AUTHORS.Name and BORROWER.Bname are a single string that represents a full
+name. You may choose to make these derived attributes and store the first, middle, and
+last names in additional separate attributes. All titles and person names should use the
+same case conventions after normalization. Note that your given source data does not
+respect any person naming conventions.
