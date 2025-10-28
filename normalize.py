@@ -10,7 +10,7 @@ def detect_delimiter(sample_line: str) -> str:
     comma_count = sample_line.count(",")
     return "\t" if tab_count > comma_count else ","
 
-#This gets a book for the reader to read. (book class?) 
+#This gets a book for the reader to read. (book class) 
 def read_books(books_path: str):
     with open(books_path, "r", encoding="utf-8", newline="") as f:
         first_line = f.readline()
@@ -23,15 +23,15 @@ def read_books(books_path: str):
         isbn10_key = None
         title_key = None
         author_key = None
-        # Normalize header keys to expected ones
+        # Normalize header keys to retrieve information 
         header_lower_to_actual = {h.lower(): h for h in reader.fieldnames or []}
         for key in header_lower_to_actual:
             if key == "isbn10":
-                isbn10_key = header_lower_to_actual[key]
+                isbn10_key = header_lower_to_actual[key] ##isbn number 
             if key == "title":
-                title_key = header_lower_to_actual[key]
+                title_key = header_lower_to_actual[key] #title of book
             if key == "author":
-                author_key = header_lower_to_actual[key]
+                author_key = header_lower_to_actual[key] #author's key
 
         if not (isbn10_key and title_key and author_key):
             raise ValueError(
@@ -52,7 +52,7 @@ def read_books(books_path: str):
                 a.strip() for a in authors_raw.split(",") if a.strip()
             ]
 
-            # Record unique book by ISBN (first occurrence wins)
+            # Record unique book by ISBN (Primary key)
             if isbn not in isbn_to_title:
                 isbn_to_title[isbn] = title
             # Merge authors per ISBN
@@ -98,12 +98,13 @@ def read_borrowers(borrowers_path: str):
             addr = (row.get(addr_key) or "").strip()
             city = (row.get(city_key) or "").strip()
             state = (row.get(state_key) or "").strip()
-            full_address = ", ".join([p for p in [addr, city, state] if p])
+            full_address = ", ".join([p for p in [addr, city, state] if p]) 
             phone = (row.get(phone_key) or "").strip()
-
+            
+            #inserts the element in the borrowers file. 
             borrowers.append(
                 {
-                    "Card_id": card_id,
+                    "Card_id": card_id, 
                     "Ssn": ssn,
                     "Bname": bname,
                     "Address": full_address,
@@ -114,7 +115,7 @@ def read_borrowers(borrowers_path: str):
     return borrowers
 #end of borrowers class
 
-#write to ???
+#function to write to a generic file 
 def write_csv(path: str, fieldnames: list[str], rows: list[dict[str, str]]):
     with open(path, "w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -122,7 +123,7 @@ def write_csv(path: str, fieldnames: list[str], rows: list[dict[str, str]]):
         for row in rows:
             writer.writerow(row)
 
-#author class?
+#author class
 def normalize(books_path: str, borrowers_path: str, output_dir: str):
     isbn_to_title, isbn_to_authors = read_books(books_path)
 
@@ -134,7 +135,7 @@ def normalize(books_path: str, borrowers_path: str, output_dir: str):
     # Accumulate from all ISBNs to ensure deterministic ordering by first appearance
     for isbn in isbn_to_authors:
         for name in isbn_to_authors[isbn]:
-            normalized_name = " ".join(name.split())  # collapse internal whitespace
+            normalized_name = " ".join(name.split())  # find whitespace
             if normalized_name not in author_name_to_id:
                 author_name_to_id[normalized_name] = next_author_id
                 authors_rows.append({"Author_id": str(next_author_id), "Name": normalized_name})
@@ -154,9 +155,9 @@ def normalize(books_path: str, borrowers_path: str, output_dir: str):
     ]
 
     # Borrowers
-    borrower_rows = read_borrowers(borrowers_path)
+    borrower_rows = read_borrowers(borrowers_path) #calls the read_borrowers class 
 
-    # Write outputs
+    # Write outputs, calls the write_csv function to write to a file
     os.makedirs(output_dir, exist_ok=True)
     write_csv(os.path.join(output_dir, "authors.csv"), ["Author_id", "Name"], authors_rows)
     write_csv(os.path.join(output_dir, "book.csv"), ["Isbn", "Title"], book_rows)
@@ -227,7 +228,7 @@ def main():
     borrowers_path = os.path.join(base_dir, "borrowers.csv")
     output_dir = base_dir
 
-    stats = normalize(books_path, borrowers_path, output_dir)
+    stats = normalize(books_path, borrowers_path, output_dir) 
     validation = validate_outputs(output_dir)
 
     print("Normalization complete.")
