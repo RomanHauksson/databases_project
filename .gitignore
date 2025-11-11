@@ -1,4 +1,4 @@
 .DS_Store
 *.zip
-my_normalize/data/intermediate/*
-my_normalize/data/normalized/*
+normalization/data/intermediate/*
+normalization/data/normalized/*
