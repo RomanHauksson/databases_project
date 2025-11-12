@@ -3,9 +3,15 @@ CREATE TABLE "authors" (
 	"name" text
 );
 --> statement-breakpoint
+CREATE TABLE "book" (
+	"isbn" char(13) PRIMARY KEY NOT NULL,
+	"title" text
+);
+--> statement-breakpoint
 CREATE TABLE "book_authors" (
-	"author_id" serial PRIMARY KEY NOT NULL,
-	"isbn" char(13) PRIMARY KEY NOT NULL
+	"author_id" serial NOT NULL,
+	"isbn" char(13),
+	CONSTRAINT "book_authors_author_id_isbn_pk" PRIMARY KEY("author_id","isbn")
 );
 --> statement-breakpoint
 CREATE TABLE "book_loans" (

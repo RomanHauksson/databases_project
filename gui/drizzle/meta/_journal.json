@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1762901395113,
-      "tag": "0000_free_epoch",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1762901923930,
-      "tag": "0001_red_stephen_strange",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1762902567634,
-      "tag": "0002_amusing_loners",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1762902734110,
-      "tag": "0003_shocking_speed_demon",
+      "when": 1762977092866,
+      "tag": "0000_rare_zombie",
       "breakpoints": true
     }
   ]
