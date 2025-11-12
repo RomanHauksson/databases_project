@@ -2,35 +2,61 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, [install Node.js](https://nodejs.org/en/download) if you haven't already. Verify that you're using Node version 24, which is the latest LTS version, using [Node Version Manager](https://github.com/nvm-sh/nvm).
+
+```bash
+# Download and install Node.js:
+nvm install 24
+# Verify the Node.js version:
+node -v # Should print "v24.11.1".
+# Verify npm version:
+npm -v # Should print "11.6.2".
+```
+
+Install the Node dependencies for this project.
+
+```bash
+cd gui # Make sure you're in the `gui` subdirectory, not the root directory
+npm install
+```
+
+To begin development, start the development server.
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
+
+Whenever you push changes to the `main` branch, [Vercel](https://vercel.com/) will automatically rebuild the project and deploy it to https://databases-project.vercel.app/. Vercel requires a paid plan to add multiple collaborators to the project. Let me know if you want to manage the deployments as well, and I can look into deploying this with a different service.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+This website is built with Next.js, the most popular meta-framework for React. To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Neon
 
-## Deploy on Vercel
+We're using [Neon](https://neon.tech), a service that hosts a Postgres database for us. You need to add a file `.env` that specifies the database connection string. Check the group chat for this.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+DATABASE_URL="..."
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Drizzle
+
+We're using [Drizzle](https://orm.drizzle.team/) for object-relational mapping. This makes it easier to write functions that query the database, since we can write the queries in Typescript right in this repository.
+
+To make changes to the database schema, edit `schema.ts`, then run this command to push this change to the database:
+
+```bash
+npx drizzle-kit push
+```
+
+[Here's the documentation on writing queries using Drizzle](https://orm.drizzle.team/docs/rqb), and [here's the documentation on fetching data using an ORM in Next.js](https://nextjs.org/docs/app/getting-started/fetching-data#with-an-orm-or-database).
