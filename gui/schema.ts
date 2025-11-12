@@ -14,19 +14,19 @@ export const book = pgTable("book", {
   title: text("title"),
 });
 
-export const bookAuthors = pgTable(
-  "book_authors",
-  {
-    authorId: serial("author_id"),
-    isbn: char("isbn", { length: 13 }),
-  },
-  (table) => [primaryKey({ columns: [table.authorId, table.isbn] })]
-);
-
 export const authors = pgTable("authors", {
   id: serial("id").primaryKey(),
   name: text("name"),
 });
+
+export const bookAuthors = pgTable(
+  "book_authors",
+  {
+    authorId: serial("author_id").references(() => authors.id),
+    isbn: char("isbn", { length: 13 }).references(() => book.isbn),
+  },
+  (table) => [primaryKey({ columns: [table.authorId, table.isbn] })]
+);
 
 export const borrower = pgTable("borrower", {
   cardId: serial("card_id").primaryKey(),
@@ -38,8 +38,8 @@ export const borrower = pgTable("borrower", {
 
 export const bookLoans = pgTable("book_loans", {
   id: serial("id").primaryKey(),
-  isbn: char("isbn", { length: 13 }),
-  cardId: text("card_id"),
+  isbn: char("isbn", { length: 13 }).references(() => book.isbn),
+  cardId: serial("card_id").references(() => borrower.cardId),
   address: text("address"),
   phoneNumber: text("phone_number"),
   dateOut: date("date_out"),
@@ -48,7 +48,9 @@ export const bookLoans = pgTable("book_loans", {
 });
 
 export const fines = pgTable("fines", {
-  loanId: serial("loan_id").primaryKey(),
+  loanId: serial("loan_id")
+    .primaryKey()
+    .references(() => bookLoans.id),
   amount: numeric("amount"),
   paid: boolean(),
 });
