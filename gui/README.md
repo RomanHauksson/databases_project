@@ -43,7 +43,9 @@ This website is built with Next.js, the most popular meta-framework for React. T
 
 ## Neon
 
-We're using [Neon](https://neon.tech), a service that hosts a Postgres database for us. You need to add a file `.env` that specifies the database connection string. Check the group chat for this.
+We're using [Neon](https://neon.tech), a service that hosts a Postgres database for us. I shared the Neon project with each of you via email. You can't see the shared project on your Neon homepage, but you can access it directly via [this link](https://console.neon.tech/app/projects/spring-salad-20344932).
+
+You need to add a file `.env` that specifies the database connection string. Check the group chat for this.
 
 ```
 DATABASE_URL="..."
