@@ -32,7 +32,7 @@ export const bookAuthors = pgTable(
 
 export const borrower = pgTable("borrower", {
   cardId: char("card_id", { length: 8 }).primaryKey(),
-  ssn: char("ssn", { length: 10 }),
+  ssn: char("ssn", { length: 11 }),
   name: text("name"),
   address: text("address"),
   phoneNumber: text("phone_number"),
