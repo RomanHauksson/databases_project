@@ -1,9 +1,14 @@
 [project]
-name = "my-normalize"
+name = "normalization"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "ipykernel>=7.1.0",
+]
+
+[dependency-groups]
+dev = [
     "ipykernel>=7.1.0",
 ]
