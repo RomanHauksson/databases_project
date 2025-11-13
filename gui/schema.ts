@@ -31,8 +31,8 @@ export const bookAuthors = pgTable(
 );
 
 export const borrower = pgTable("borrower", {
-  cardId: serial("card_id").primaryKey(),
-  ssn: char("ssn", { length: 9 }),
+  cardId: char("card_id", { length: 8 }).primaryKey(),
+  ssn: char("ssn", { length: 10 }),
   name: text("name"),
   address: text("address"),
   phoneNumber: text("phone_number"),
@@ -41,7 +41,9 @@ export const borrower = pgTable("borrower", {
 export const bookLoans = pgTable("book_loans", {
   id: serial("id").primaryKey(),
   bookIsbn13: char("book_isbn13", { length: 13 }).references(() => book.isbn13),
-  borrowerCardId: serial("borrower_card_id").references(() => borrower.cardId),
+  borrowerCardId: char("borrower_card_id", { length: 8 }).references(
+    () => borrower.cardId
+  ),
   address: text("address"),
   phoneNumber: text("phone_number"),
   dateOut: date("date_out"),
