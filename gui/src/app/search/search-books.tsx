@@ -32,7 +32,11 @@ export function SearchBooks() {
 				placeholder="The Great Gatsby"
 				className="border border-black rounded-lg px-2 py-1"
 			/>
-			<p>{isPending ? "Loading..." : `${results.length} results`}</p>
+			<p>
+				{isPending
+					? "Loading..."
+					: `${results.length === 0 ? 0 : results[0].numResults} results`}
+			</p>
 			<table className="table-fixed w-full border-collapse border border-black [&_td,&_th]:px-2 [&_td,&_th]:border [&_td,&_th]:border-black">
 				<thead>
 					<tr>
