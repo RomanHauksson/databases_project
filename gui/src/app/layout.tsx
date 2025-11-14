@@ -26,7 +26,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-lg mx-auto p-4`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-200 mx-auto p-4`}
 			>
 				<nav>
 					<ul className="flex gap-2 py-2">

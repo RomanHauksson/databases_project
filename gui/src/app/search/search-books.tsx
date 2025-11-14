@@ -33,18 +33,40 @@ export function SearchBooks() {
 				className="border border-black rounded-lg px-2 py-1"
 			/>
 			<p>{isPending ? "Loading..." : `${results.length} results`}</p>
-			<ul>
-				{results.map((book) => {
-					return (
-						<li key={book.isbn13}>
-							{book.title},{" "}
-							{book.authorNames.map((name) => (
-								<span key={name}>{name}, </span>
-							))}
-						</li>
-					);
-				})}
-			</ul>
+			<table className="table-fixed w-full border-collapse border border-black [&_td,&_th]:px-2 [&_td,&_th]:border [&_td,&_th]:border-black">
+				<thead>
+					<tr>
+						<th className="text-left" scope="col">
+							Title
+						</th>
+						<th className="text-left" scope="col">
+							ISBN13
+						</th>
+						<th className="text-left" scope="col">
+							Authors
+						</th>
+						<th className="text-center" scope="col">
+							Checked out?
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{results.map((book) => {
+						return (
+							<tr key={book.isbn13}>
+								<th className="text-left" scope="row">
+									{book.title}
+								</th>
+								<td className="text-left">{book.isbn13}</td>
+								<td className="text-left">{book.authorNames.join(", ")}</td>
+								<td className="text-center">
+									{book.isCheckedOut ? "Yes" : "No"}
+								</td>
+							</tr>
+						);
+					})}
+				</tbody>
+			</table>
 		</div>
 	);
 }
