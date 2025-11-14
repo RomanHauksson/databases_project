@@ -3,16 +3,20 @@ import { db } from "@/db/db";
 import { book, authors, bookAuthors, bookLoans } from "@/db/schema";
 import { eq, ilike, isNull, sql } from "drizzle-orm";
 
+export type BookResult = {
+  title: string;
+  isbn13: string;
+  authorNames: string[];
+  isCheckedOut: boolean;
+};
+
 export const searchBooks = async (
   searchTerm: string
-): Promise<
-  {
-    title: string;
-    isbn13: string;
-    authorNames: string[];
-    isCheckedOut: boolean;
-  }[]
-> => {
+): Promise<BookResult[]> => {
+  if (searchTerm === "") {
+    return [];
+  }
+
   const books = await db
     .select({
       isbn13: book.isbn13,
