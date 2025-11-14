@@ -17,50 +17,29 @@ export const searchBooks = async (
     return [];
   }
 
-  const books = await db
-    .select({
-      isbn13: book.isbn13,
-      title: book.title,
-    })
-    .from(book)
-    .where(ilike(book.title, `%${searchTerm}%`))
-    .limit(50);
+  const query = sql`SELECT
+  ${book.isbn13},
+  ${book.title},
+  array_agg(${authors.name}) as author_names,
+  BOOL_OR(${bookLoans.bookIsbn13} IS NOT NULL AND ${
+    bookLoans.dateIn
+  } IS NULL) as is_checked_out
+FROM
+  ${book} LEFT JOIN ${bookAuthors} ON ${book.isbn13} = ${bookAuthors.bookIsbn13}
+  LEFT JOIN ${authors} ON ${bookAuthors.authorId} = ${authors.id}
+  LEFT JOIN ${bookLoans} ON ${book.isbn13} = ${bookLoans.bookIsbn13}
+WHERE
+  ${book.title} ilike ${`%${searchTerm}%`}
+  or ${book.isbn13} ilike ${`%${searchTerm}%`}
+  or ${authors.name} ilike ${`%${searchTerm}%`}
+GROUP BY ${book.isbn13}
+LIMIT 50`;
 
-  // For each book, get authors and checkout status
-  const booksWithDetails = await Promise.all(
-    books.map(async (bookItem) => {
-      // Get authors for this book
-      const bookAuthorsResult = await db
-        .select({
-          authorName: authors.name,
-        })
-        .from(bookAuthors)
-        .innerJoin(authors, eq(bookAuthors.authorId, authors.id))
-        .where(eq(bookAuthors.bookIsbn13, bookItem.isbn13));
-
-      const authorNames = bookAuthorsResult
-        .map((ba) => ba.authorName)
-        .filter((name): name is string => name !== null);
-
-      // Check if the book is currently checked out (has a loan with no date_in)
-      const activeLoans = await db
-        .select()
-        .from(bookLoans)
-        .where(
-          sql`${bookLoans.bookIsbn13} = ${bookItem.isbn13} AND ${bookLoans.dateIn} IS NULL`
-        )
-        .limit(1);
-
-      const isCheckedOut = activeLoans.length > 0;
-
-      return {
-        title: bookItem.title ?? "",
-        isbn13: bookItem.isbn13,
-        authorNames,
-        isCheckedOut,
-      };
-    })
-  );
-
-  return booksWithDetails;
+  const result = await db.execute(query);
+  return result.rows.map((row: any) => ({
+    isbn13: row.isbn13,
+    title: row.title,
+    authorNames: row.author_names,
+    isCheckedOut: row.is_checked_out,
+  }));
 };
