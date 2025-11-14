@@ -44,8 +44,6 @@ export const bookLoans = pgTable("book_loans", {
   borrowerCardId: char("borrower_card_id", { length: 8 }).references(
     () => borrower.cardId
   ),
-  address: text("address"),
-  phoneNumber: text("phone_number"),
   dateOut: date("date_out"),
   dueDate: date("due_date"),
   dateIn: date("date_in"),
