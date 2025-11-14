@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div>
       <h1>Book search</h1>
-      <BookList searchTerm="gatsby"/>
+      <BookList searchTerm="scott"/>
     </div>
   );
 }
