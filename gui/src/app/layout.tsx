@@ -36,6 +36,9 @@ export default function RootLayout({
 						<li>
 							<Link href="/search">Search</Link>
 						</li>
+						<li>
+							<Link href="/checkout">Checkout</Link>
+						</li>
 					</ul>
 				</nav>
 				{children}
