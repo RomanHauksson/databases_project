@@ -5,11 +5,47 @@ import {
     fines,
     book
 } from "@/db/schema"
-import { eq, isNull, and, sql, count } from "drizzle-orm"
+import { eq, isNull, and, sql, count, or } from "drizzle-orm"
 
 export const checkOut = async (isbn13: string, borrowerCardId: string): Promise<void> => {
     try {
-        // Check how many books the borrower currently has checked out
+        // Constraint 1: Check if the book is already checked out by another borrower
+        const bookAlreadyCheckedOut = await db
+            .select()
+            .from(bookLoans)
+            .where(
+                and(
+                    eq(bookLoans.bookIsbn13, isbn13),
+                    isNull(bookLoans.dateIn)
+                )
+            )
+            .limit(1);
+        
+        if (bookAlreadyCheckedOut.length > 0) {
+            throw new Error(`This book is already checked out by another borrower and cannot be checked out at this time.`);
+        }
+
+        // Constraint 2: Check if the borrower has any unpaid fines
+        const borrowerFines = await db
+            .select()
+            .from(fines)
+            .innerJoin(bookLoans, eq(fines.loanId, bookLoans.id))
+            .where(
+                and(
+                    eq(bookLoans.borrowerCardId, borrowerCardId),
+                    or(
+                        eq(fines.paid, false),
+                        isNull(fines.paid)
+                    )
+                )
+            )
+            .limit(1);
+        
+        if (borrowerFines.length > 0) {
+            throw new Error(`Cannot check out books. You have unpaid fines that must be paid first.`);
+        }
+
+        // Constraint 3: Check how many books the borrower currently has checked out (max 3)
         const currentLoans = await db
             .select({ count: sql<number>`count(*)` })
             .from(bookLoans)
