@@ -96,7 +96,31 @@ export const createBorrower = async ({
 	name,
 	address,
 	phoneNumber,
-}: Omit<Borrower, "cardId">) => {};
+}: Omit<Borrower, "cardId">) => {
+	try {
+        // Insert borrower and return the created row
+        const result = await db
+            .insert(borrower)
+            .values({
+                ssn,
+                name,
+                address,
+                phoneNumber,
+            })
+            .returning();
+
+        // result[0] contains the new borrower record, including the generated cardId
+        return result[0];
+    } catch (error: any) {
+        // Drizzle/Postgres unique violation error code
+        if (error.code === "23505") {
+            // This means UNIQUE constraint failed (likely SSN)
+            throw new Error("Invalid input: borrower already has a card");
+        }
+
+        // Unexpected error, rethrow
+        throw error;
+    }};  
 
 // See Vercel's docs on making cron jobs: https://vercel.com/docs/cron-jobs/quickstart?framework=nextjs-app
 
