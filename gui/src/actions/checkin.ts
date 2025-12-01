@@ -1,11 +1,11 @@
-import { db } from "@/db/db"
+import { db } from "@/db/db";
 import {
     bookLoans,
     book,
     borrower
-} from "@/db/schema"
+} from "@/db/schema";
 
-import {eq, ilike, or} from "drizzle-orm"
+import { eq, ilike, or, and, isNull } from "drizzle-orm";
 
 type BookLoan = typeof bookLoans.$inferSelect;
 
@@ -41,4 +41,26 @@ export const searchBookLoans = async (
 	return loans;
 };
 
-export const checkIn = async (isbn13: string) => {};
+export const checkIn = async (isbn13: string) => {
+	const activeLoan = await db
+		.select()
+		.from(bookLoans)
+		.where(
+			and(
+				eq(bookLoans.bookIsbn13, isbn13),
+				isNull(bookLoans.dateIn)
+			)
+		)
+		.limit(1);
+
+	if (activeLoan.length === 0) {
+		return { success: false, message: "No active loan found for this book." };
+	}
+
+	await db
+		.update(bookLoans)
+		.set({ dateIn: new Date() })
+		.where(eq(bookLoans.id, activeLoan[0].id));
+
+	return { success: true };
+};
