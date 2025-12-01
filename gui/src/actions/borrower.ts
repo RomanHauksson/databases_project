@@ -14,7 +14,31 @@ export const createBorrower = async ({
 	name,
 	address,
 	phoneNumber,
-}: Omit<Borrower, "cardId">) => {};
+}: Omit<Borrower, "cardId">) => {
+	// Check if a borrower with the same SSN already exists
+    const existing = await db
+        .select()
+        .from(borrower)
+        .where(eq(borrower.ssn, ssn))
+        .limit(1);
+
+    if (existing.length > 0) {
+        throw new Error("Invalid input: you already have a card");
+    }
+
+    // Insert new borrower
+    const inserted = await db
+        .insert(borrower)
+        .values({
+            ssn,
+            name,
+            address,
+            phoneNumber,
+        })
+        .returning();
+
+    // returning() always returns an array; return the row itself
+    return inserted[0];};
 
 // See Vercel's docs on making cron jobs: https://vercel.com/docs/cron-jobs/quickstart?framework=nextjs-app
 
