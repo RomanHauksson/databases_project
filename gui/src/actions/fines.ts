@@ -1,4 +1,2 @@
-import { db } from "@/db/db"
-import {
-    
-} from "@/db/schema"
+import { db } from "@/db/db";
+import {} from "@/db/schema";
