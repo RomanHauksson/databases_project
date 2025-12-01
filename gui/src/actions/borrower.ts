@@ -25,7 +25,9 @@ export const createBorrower = async ({
     if (existing.length > 0) {
         throw new Error("Invalid input: you already have a card");
     }
-
+	if (!ssn) {
+		throw new Error ("SSN is a required field");
+	}
     // Insert new borrower
     const inserted = await db
         .insert(borrower)
