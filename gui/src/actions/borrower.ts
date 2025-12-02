@@ -19,8 +19,8 @@ const generateCardId = async (): Promise<string> => {
   let maxNumber = 0;
 
   // Extract the numeric part from existing IDs and find the maximum
-  for (const borrower of existingBorrowers) {
-    const match = borrower.cardId.match(/^ID(\d{6})$/);
+  for (const borrowerRecord of existingBorrowers) {
+    const match = borrowerRecord.cardId.match(/^ID(\d{6})$/);
     if (match) {
       const number = parseInt(match[1], 10);
       if (number > maxNumber) {
