@@ -34,10 +34,10 @@ export const bookAuthors = pgTable(
 
 export const borrower = pgTable("borrower", {
   cardId: char("card_id", { length: 8 }).primaryKey(),
-  ssn: char("ssn", { length: 11 }),
-  name: text("name"),
-  address: text("address"),
-  phoneNumber: text("phone_number"),
+  ssn: char("ssn", { length: 11 }).notNull().unique(),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  phoneNumber: text("phone_number").notNull(),
 });
 
 export const bookLoans = pgTable("book_loans", {
@@ -54,11 +54,9 @@ export const bookLoans = pgTable("book_loans", {
 });
 
 export const fines = pgTable("fines", {
-	loanId: serial("loan_id")
-		.primaryKey()
-		.references(() => bookLoans.id),
-	fine_amt: numeric("amount", { precision: 8, scale: 2 })
-		.default("0.00"),
-	//	fine_amt: numeric("amount"), // TODO: change to fixed-precision with two decimal places
-	paid: boolean()
+  loanId: serial("loan_id")
+    .primaryKey()
+    .references(() => bookLoans.id),
+  amount: numeric("amount"), // TODO: change to fixed-precision with two decimal places
+  paid: boolean(),
 });

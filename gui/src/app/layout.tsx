@@ -23,29 +23,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-200 mx-auto p-4`}
-      >
-        <nav>
-          <ul className="flex gap-2 py-2">
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <Link href="/search">Search</Link>
-            </li>
-            <li>
-              <Link href="/checkout">Checkout</Link>
-            </li>
-            <li>
-              <Link href="/checkin">Check In</Link>
-            </li>
-          </ul>
-        </nav>
-        {children}
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en">
+			<body
+				className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-200 mx-auto p-4`}
+			>
+				<nav>
+					<ul className="flex gap-2 py-2">
+						<li>
+							<Link href="/">Home</Link>
+						</li>
+						<li>
+							<Link href="/search">Search</Link>
+						</li>
+						<li>
+							<Link href="/checkout">Checkout</Link>
+						</li>
+						<li>
+							<Link href="/checkin">Check In</Link>
+						</li>
+						<li>
+							<Link href="/borrower">Borrower</Link>
+						</li>
+					</ul>
+				</nav>
+				{children}
+			</body>
+		</html>
+	);
 }
