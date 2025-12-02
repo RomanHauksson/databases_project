@@ -57,6 +57,8 @@ export const fines = pgTable("fines", {
 	loanId: serial("loan_id")
 		.primaryKey()
 		.references(() => bookLoans.id),
-	amount: numeric("amount"), // TODO: change to fixed-precision with two decimal places
-	paid: boolean(),
+	fine_amt: numeric("amount", { precision: 8, scale: 2 })
+		.default("0.00"),
+	//	fine_amt: numeric("amount"), // TODO: change to fixed-precision with two decimal places
+	paid: boolean()
 });
