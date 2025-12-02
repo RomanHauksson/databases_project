@@ -1,12 +1,12 @@
 import {
-  pgTable,
-  text,
+  boolean,
   char,
-  serial,
   date,
   numeric,
-  boolean,
+  pgTable,
   primaryKey,
+  serial,
+  text,
 } from "drizzle-orm/pg-core";
 
 export const book = pgTable("book", {

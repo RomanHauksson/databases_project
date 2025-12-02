@@ -11,35 +11,35 @@ import { eq, ilike, or, and, isNull } from "drizzle-orm";
 type BookLoan = typeof bookLoans.$inferSelect;
 
 export const searchBookLoans = async (
-	searchTerm: string,
+  searchTerm: string,
 ): Promise<BookLoan[]> => {
-	if (searchTerm === "") {
-		return [];
-	}
+  if (searchTerm === "") {
+    return [];
+  }
 
-	const loans = await db
-		.select({
-			id: bookLoans.id,
-			bookIsbn13: bookLoans.bookIsbn13,
-			borrowerCardId: bookLoans.borrowerCardId,
-			dateOut: bookLoans.dateOut,
-			dueDate: bookLoans.dueDate,
-			dateIn: bookLoans.dateIn,
-		})
-		.from(bookLoans)
-		.leftJoin(book, eq(bookLoans.bookIsbn13, book.isbn13))
-		.leftJoin(borrower, eq(bookLoans.borrowerCardId, borrower.cardId))
-		.where(
-			or(
-				ilike(bookLoans.bookIsbn13, `%${searchTerm}%`),
-				ilike(book.title, `%${searchTerm}%`),
-				ilike(bookLoans.borrowerCardId, `%${searchTerm}%`),
-				ilike(borrower.name, `%${searchTerm}%`),
-			),
-		)
-		.limit(50);
+  const loans = await db
+    .select({
+      id: bookLoans.id,
+      bookIsbn13: bookLoans.bookIsbn13,
+      borrowerCardId: bookLoans.borrowerCardId,
+      dateOut: bookLoans.dateOut,
+      dueDate: bookLoans.dueDate,
+      dateIn: bookLoans.dateIn,
+    })
+    .from(bookLoans)
+    .leftJoin(book, eq(bookLoans.bookIsbn13, book.isbn13))
+    .leftJoin(borrower, eq(bookLoans.borrowerCardId, borrower.cardId))
+    .where(
+      or(
+        ilike(bookLoans.bookIsbn13, `%${searchTerm}%`),
+        ilike(book.title, `%${searchTerm}%`),
+        ilike(bookLoans.borrowerCardId, `%${searchTerm}%`),
+        ilike(borrower.name, `%${searchTerm}%`),
+      ),
+    )
+    .limit(50);
 
-	return loans;
+  return loans;
 };
 
 export const checkIn = async (isbn13: string) => {
