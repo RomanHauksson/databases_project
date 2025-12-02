@@ -39,6 +39,9 @@ export default function RootLayout({
 						<li>
 							<Link href="/checkout">Checkout</Link>
 						</li>
+						<li>
+							<Link href="/checkin">Check In</Link>
+						</li>
 					</ul>
 				</nav>
 				{children}
