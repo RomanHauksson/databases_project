@@ -42,6 +42,9 @@ export default function RootLayout({
 						<li>
 							<Link href="/checkin">Check In</Link>
 						</li>
+						<li>
+							<Link href="/borrower">Borrower</Link>
+						</li>
 					</ul>
 				</nav>
 				{children}
