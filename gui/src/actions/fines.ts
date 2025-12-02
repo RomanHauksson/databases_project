@@ -35,7 +35,7 @@ export async function getBorrowerFines(
   const rows = await db
     .select({
       loanId: bookLoans.id,
-      fineAmt: fines.fine_amt,
+      fineAmt: fines.amount,
       paid: fines.paid,
       bookTitle: book.title,
       dateOut: bookLoans.dateOut,
@@ -43,7 +43,7 @@ export async function getBorrowerFines(
       dateIn: bookLoans.dateIn,
 
       totalFines: sql<number>`
-        SUM(${fines.fine_amt})
+        SUM(${fines.amount})
         OVER (PARTITION BY ${bookLoans.borrowerCardId})
       `,
     })
@@ -122,17 +122,17 @@ for (const loan of loans) {
     // Create a new fine entry if one does not yet exist
     await db.insert(fines).values({
       loanId: loan.id,          // correct
-      fine_amt: fineAmount.toFixed(2), // must match schema
+      amount: fineAmount.toFixed(2), // must match schema
       paid: false,
     });
     continue;
   }
   // Update existing fine if amount has changed and not yet paid
     if (existing.paid === true) continue;
-    if (Number(existing.fine_amt) !== fineAmount) {
+    if (Number(existing.amount) !== fineAmount) {
       await db
         .update(fines)
-        .set({ fine_amt: fineAmount.toFixed(2) })
+        .set({ amount: fineAmount.toFixed(2) })
         .where(eq(fines.loanId, loan.id));
     }
   }
